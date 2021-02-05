@@ -56,6 +56,12 @@ export default [
                 component: './TableList',
               },
               {
+                name: 'list.scenario-list',
+                icon: 'table',
+                path: '/scenario/list',
+                component: './ScenarioList',
+              },
+              {
                 component: './404',
               },
             ],
