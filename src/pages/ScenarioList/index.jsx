@@ -81,8 +81,8 @@ const ScenarioList = () => {
   /** 新建窗口的弹窗 */
   const [createModalVisible, handleModalVisible] = useState(false);
   /** 分布更新窗口的弹窗 */
-
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
+
   const [showDetail, setShowDetail] = useState(false);
   const actionRef = useRef();
   const [currentRow, setCurrentRow] = useState();
@@ -292,9 +292,6 @@ const ScenarioList = () => {
           >
             <FormattedMessage id="pages.searchScenario.batchDeletion" defaultMessage="批量删除"/>
           </Button>
-          <Button type="primary">
-            <FormattedMessage id="pages.searchScenario.batchApproval" defaultMessage="批量审批"/>
-          </Button>
         </FooterToolbar>
       )}
       <ModalForm
@@ -349,12 +346,14 @@ const ScenarioList = () => {
         }}
         onCancel={() => {
           handleUpdateModalVisible(false);
-          setCurrentRow(undefined);
+          if (!showDetail) {
+            setCurrentRow(undefined);
+          }
         }}
         updateModalVisible={updateModalVisible}
         values={currentRow || {}}
       />
-
+      {/*
       <Drawer
         width={600}
         visible={showDetail}
@@ -377,7 +376,7 @@ const ScenarioList = () => {
             columns={columns}
           />
         )}
-      </Drawer>
+      </Drawer> */}
     </PageContainer>
   );
 };
