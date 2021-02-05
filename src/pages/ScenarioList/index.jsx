@@ -1,13 +1,14 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Input, Drawer } from 'antd';
-import React, { useState, useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
-import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
+import {PlusOutlined} from '@ant-design/icons';
+import {Button, Drawer, message} from 'antd';
+import React, {useRef, useState} from 'react';
+import {FormattedMessage, useIntl} from 'umi';
+import {FooterToolbar, PageContainer} from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
+import {ModalForm, ProFormText, ProFormTextArea} from '@ant-design/pro-form';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import UpdateForm from './components/UpdateForm';
-import { queryRule, updateRule, addRule, removeRule } from './service';
+import {addRule, queryRule, removeRule, updateRule} from './service';
+
 /**
  * 添加节点
  *
@@ -18,7 +19,7 @@ const handleAdd = async (fields) => {
   const hide = message.loading('正在添加');
 
   try {
-    await addRule({ ...fields });
+    await addRule({...fields});
     hide();
     message.success('添加成功');
     return true;
@@ -76,7 +77,7 @@ const handleRemove = async (selectedRows) => {
   }
 };
 
-const TableList = () => {
+const ScenarioList = () => {
   /** 新建窗口的弹窗 */
   const [createModalVisible, handleModalVisible] = useState(false);
   /** 分布更新窗口的弹窗 */
@@ -93,12 +94,11 @@ const TableList = () => {
     {
       title: (
         <FormattedMessage
-          id="pages.searchTable.updateForm.ruleName.nameLabel"
-          defaultMessage="规则名称"
+          id="pages.searchScenario.updateForm.ruleName.nameLabel"
+          defaultMessage="业务事件类型"
         />
       ),
       dataIndex: 'name',
-      tip: '规则名称是唯一的 key',
       render: (dom, entity) => {
         return (
           <a
@@ -113,12 +113,12 @@ const TableList = () => {
       },
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleDesc" defaultMessage="描述" />,
+      title: <FormattedMessage id="pages.searchScenario.titleDesc" defaultMessage="特征"/>,
       dataIndex: 'desc',
       valueType: 'textarea',
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleCallNo" defaultMessage="服务调用次数" />,
+      title: <FormattedMessage id="pages.searchScenario.titleCallNo" defaultMessage="行业"/>,
       dataIndex: 'callNo',
       sorter: true,
       hideInForm: true,
@@ -129,67 +129,60 @@ const TableList = () => {
         })}`,
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="状态" />,
-      dataIndex: 'status',
+      title: <FormattedMessage id="pages.searchScenario.titleStatus" defaultMessage="经营属性"/>,
+      dataIndex: 'status2',
       hideInForm: true,
       valueEnum: {
         0: {
           text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.default" defaultMessage="关闭" />
+            <FormattedMessage id="pages.searchScenario.nameStatus.default" defaultMessage="关闭"/>
           ),
           status: 'Default',
         },
         1: {
           text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.running" defaultMessage="运行中" />
+            <FormattedMessage id="pages.searchScenario.nameStatus.running" defaultMessage="运行中"/>
           ),
           status: 'Processing',
         },
         2: {
           text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.online" defaultMessage="已上线" />
+            <FormattedMessage id="pages.searchScenario.nameStatus.online" defaultMessage="已上线"/>
           ),
           status: 'Success',
         },
         3: {
           text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.abnormal" defaultMessage="异常" />
+            <FormattedMessage id="pages.searchScenario.nameStatus.abnormal" defaultMessage="异常"/>
           ),
           status: 'Error',
         },
       },
     },
     {
-      title: (
-        <FormattedMessage id="pages.searchTable.titleUpdatedAt" defaultMessage="上次调度时间" />
-      ),
-      sorter: true,
-      dataIndex: 'updatedAt',
-      valueType: 'dateTime',
-      renderFormItem: (item, { defaultRender, ...rest }, form) => {
-        const status = form.getFieldValue('status');
-
-        if (`${status}` === '0') {
-          return false;
-        }
-
-        if (`${status}` === '3') {
-          return (
-            <Input
-              {...rest}
-              placeholder={intl.formatMessage({
-                id: 'pages.searchTable.exception',
-                defaultMessage: '请输入异常原因！',
-              })}
-            />
-          );
-        }
-
-        return defaultRender(item);
-      },
+      title: <FormattedMessage id="pages.searchScenario.titleDesc" defaultMessage="业务玩法"/>,
+      dataIndex: 'desc',
+      valueType: 'textarea',
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="操作" />,
+      title: (
+        <FormattedMessage id="pages.searchScenario.titleUpdatedAt" defaultMessage="仓类型"/>
+      ),
+      dataIndex: 'updatedAt',
+      valueType: 'textarea',
+    },
+    {
+      title: <FormattedMessage id="pages.searchScenario.titleDesc" defaultMessage="外部订单类型"/>,
+      dataIndex: 'desc',
+      valueType: 'textarea',
+    }, {
+      title: <FormattedMessage id="pages.searchScenario.titleDesc" defaultMessage="品的类型"/>,
+      dataIndex: 'desc',
+      valueType: 'textarea',
+    },
+
+    {
+      title: <FormattedMessage id="pages.searchScenario.titleOption" defaultMessage="操作"/>,
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
@@ -200,11 +193,37 @@ const TableList = () => {
             setCurrentRow(record);
           }}
         >
-          <FormattedMessage id="pages.searchTable.config" defaultMessage="配置" />
+          <FormattedMessage id="pages.searchScenario.config" defaultMessage="编辑"/>
         </a>,
-        <a key="subscribeAlert" href="https://procomponents.ant.design/">
-          <FormattedMessage id="pages.searchTable.subscribeAlert" defaultMessage="订阅警报" />
+        <a
+          key="config"
+          onClick={() => {
+            handleUpdateModalVisible(true);
+            setCurrentRow(record);
+          }}
+        >
+          <FormattedMessage id="pages.searchScenario.config" defaultMessage="删除"/>
         </a>,
+        <a
+          key="config"
+          onClick={() => {
+            handleUpdateModalVisible(true);
+            setCurrentRow(record);
+          }}
+        >
+          <FormattedMessage id="pages.searchScenario.config" defaultMessage="详情"/>
+        </a>,
+
+        <a
+          key="config"
+          onClick={() => {
+            handleUpdateModalVisible(true);
+            setCurrentRow(record);
+          }}
+        >
+          <FormattedMessage id="pages.searchScenario.config" defaultMessage="执行"/>
+        </a>,
+
       ],
     },
   ];
@@ -212,8 +231,8 @@ const TableList = () => {
     <PageContainer>
       <ProTable
         headerTitle={intl.formatMessage({
-          id: 'pages.searchTable.title',
-          defaultMessage: '查询表格',
+          id: 'pages.searchScenario.title',
+          defaultMessage: '查询场景',
         })}
         actionRef={actionRef}
         rowKey="key"
@@ -228,10 +247,10 @@ const TableList = () => {
               handleModalVisible(true);
             }}
           >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="新建" />
+            <PlusOutlined/> <FormattedMessage id="pages.searchScenario.new" defaultMessage="新建"/>
           </Button>,
         ]}
-        request={(params, sorter, filter) => queryRule({ ...params, sorter, filter })}
+        request={(params, sorter, filter) => queryRule({...params, sorter, filter})}
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -243,7 +262,7 @@ const TableList = () => {
         <FooterToolbar
           extra={
             <div>
-              <FormattedMessage id="pages.searchTable.chosen" defaultMessage="已选择" />{' '}
+              <FormattedMessage id="pages.searchScenario.chosen" defaultMessage="已选择"/>{' '}
               <a
                 style={{
                   fontWeight: 600,
@@ -251,15 +270,15 @@ const TableList = () => {
               >
                 {selectedRowsState.length}
               </a>{' '}
-              <FormattedMessage id="pages.searchTable.item" defaultMessage="项" />
+              <FormattedMessage id="pages.searchScenario.item" defaultMessage="项"/>
               &nbsp;&nbsp;
               <span>
                 <FormattedMessage
-                  id="pages.searchTable.totalServiceCalls"
+                  id="pages.searchScenario.totalServiceCalls"
                   defaultMessage="服务调用次数总计"
                 />{' '}
                 {selectedRowsState.reduce((pre, item) => pre + item.callNo, 0)}{' '}
-                <FormattedMessage id="pages.searchTable.tenThousand" defaultMessage="万" />
+                <FormattedMessage id="pages.searchScenario.tenThousand" defaultMessage="万"/>
               </span>
             </div>
           }
@@ -271,16 +290,16 @@ const TableList = () => {
               actionRef.current?.reloadAndRest?.();
             }}
           >
-            <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
+            <FormattedMessage id="pages.searchScenario.batchDeletion" defaultMessage="批量删除"/>
           </Button>
           <Button type="primary">
-            <FormattedMessage id="pages.searchTable.batchApproval" defaultMessage="批量审批" />
+            <FormattedMessage id="pages.searchScenario.batchApproval" defaultMessage="批量审批"/>
           </Button>
         </FooterToolbar>
       )}
       <ModalForm
         title={intl.formatMessage({
-          id: 'pages.searchTable.createForm.newRule',
+          id: 'pages.searchScenario.createForm.newRule',
           defaultMessage: '新建规则',
         })}
         width="400px"
@@ -304,7 +323,7 @@ const TableList = () => {
               required: true,
               message: (
                 <FormattedMessage
-                  id="pages.searchTable.ruleName"
+                  id="pages.searchScenario.ruleName"
                   defaultMessage="规则名称为必填项"
                 />
               ),
@@ -313,7 +332,7 @@ const TableList = () => {
           width="md"
           name="name"
         />
-        <ProFormTextArea width="md" name="desc" />
+        <ProFormTextArea width="md" name="desc"/>
       </ModalForm>
       <UpdateForm
         onSubmit={async (value) => {
@@ -363,4 +382,4 @@ const TableList = () => {
   );
 };
 
-export default TableList;
+export default ScenarioList;
